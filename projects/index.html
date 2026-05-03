@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Nadav Schitzer</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo">NS</a>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/projects/" class="nav-active">Projects</a></li>
+          <li><a href="/about/">About</a></li>
+        </ul>
+      </nav>
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <button class="theme-toggle">☀️</button>
+        <button class="nav-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+
+      <div class="projects-page-header">
+        <h1>Projects</h1>
+        <p class="section-subtitle" style="text-align:left; margin-top: 0.5rem;">Filter by category to explore my work.</p>
+      </div>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="web">Web</button>
+        <button class="filter-btn" data-filter="games">Games</button>
+        <button class="filter-btn" data-filter="audio">Audio</button>
+        <button class="filter-btn" data-filter="3d">3D</button>
+        <button class="filter-btn" data-filter="design">Design</button>
+      </div>
+
+      <!-- Bento-style projects grid -->
+      <div class="bento-projects">
+
+        <!-- Music Playlist – wide featured -->
+        <div class="project-card bento-wide" data-tags="web audio">
+          <div class="bento-projects-image" style="background: linear-gradient(135deg, #2d0a4e, #6d28d9, #be185d)">
+            <img class="card-preview-img" src="music-playlist/preview.png" alt="Interactive Music Playlist preview">
+          </div>
+          <div class="project-card-content">
+            <div class="project-tags">
+              <span class="tag">Web</span>
+              <span class="tag">Audio</span>
+            </div>
+            <h3>Interactive Music Playlist</h3>
+            <p>A web experience from Intro to Web Dev — part game, part music player. Users explore a curated playlist through interactive visuals and controls.</p>
+            <a href="/projects/music-playlist/" class="project-link">View Project →</a>
+          </div>
+        </div>
+
+        <!-- Guitar 3D -->
+        <div class="project-card" data-tags="3d">
+          <div class="bento-projects-image" style="background: linear-gradient(135deg, #3b1a08, #92400e, #d97706)">
+            <video
+              src="guitar-3d/guitar.mov"
+              autoplay loop muted playsinline
+              class="card-preview-img"
+              style="opacity:1; object-fit:cover;"
+            ></video>
+          </div>
+          <div class="project-card-content">
+            <div class="project-tags"><span class="tag">3D</span></div>
+            <h3>Guitar 3D Model</h3>
+            <p>A detailed 3D guitar model — modeled and rendered from scratch.</p>
+            <a href="/projects/guitar-3d/" class="project-link">View Project →</a>
+          </div>
+        </div>
+
+        <!-- Rhythm Game -->
+        <div class="project-card" data-tags="games audio">
+          <div class="bento-projects-image" style="background: linear-gradient(135deg, #7c1d0a, #c2410c, #d97706)">
+            <img class="card-preview-img" src="rhythm-game/preview.png" alt="Rhythm Game preview">
+          </div>
+          <div class="project-card-content">
+            <div class="project-tags">
+              <span class="tag">Games</span>
+              <span class="tag">Audio</span>
+            </div>
+            <h3>Rhythm Game</h3>
+            <p>A rhythm game built for Creative Coding class using p5.js.</p>
+            <a href="/projects/rhythm-game/" class="project-link">View Project →</a>
+          </div>
+        </div>
+
+        <!-- itch.io game – wide featured -->
+        <div class="project-card bento-wide" data-tags="games">
+          <div class="bento-projects-image" style="background: linear-gradient(135deg, #0c2a4a, #1e5f8a, #0f766e)">
+            <img class="card-preview-img" src="gamemaker-game/preview.png" alt="Grappco preview">
+          </div>
+          <div class="project-card-content">
+            <div class="project-tags"><span class="tag">Games</span></div>
+            <h3>Grappco</h3>
+            <p>A game built in GameMaker and published to itch.io. Playable in the browser.</p>
+            <a href="/projects/gamemaker-game/" class="project-link">View Project →</a>
+          </div>
+        </div>
+
+        <!-- RPS UI -->
+        <div class="project-card" data-tags="design">
+          <div class="bento-projects-image" style="background: linear-gradient(135deg, #0f172a, #1e3a5f, #2563eb)">
+            <img class="card-preview-img" src="" alt="Rock Paper Scissors UI preview">
+          </div>
+          <div class="project-card-content">
+            <div class="project-tags"><span class="tag">Design</span></div>
+            <h3>Rock Paper Scissors UI</h3>
+            <p>A UI design for a Rock Paper Scissors game, created in Adobe XD.</p>
+            <a href="/projects/rps-ui/" class="project-link">View Design →</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Navigate</h3>
+        <div class="footer-links">
+          <a href="/">Home</a>
+          <a href="/projects/">Projects</a>
+          <a href="/about/">About</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Social</h3>
+        <div class="footer-links">
+          <a href="#">LinkedIn</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Nadav Schitzer. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/projects.js"></script>
+</body>
+</html>

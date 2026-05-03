@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Playlist — Nadav Schitzer</title>
+  <link rel="stylesheet" href="final-project.css">
+  <style>
+    /* Info button inside ui-right */
+    #info-btn {
+      margin-left: 12px;
+      width: 26px !important;
+      height: 26px !important;
+      font-size: 14px !important;
+      border-radius: 50% !important;
+      border: 1.5px solid rgba(255,255,255,0.5) !important;
+      background: transparent !important;
+      color: #fff !important;
+      cursor: pointer;
+      flex-shrink: 0;
+      opacity: 0.75;
+      transition: opacity 0.15s, border-color 0.15s;
+      font-style: normal;
+      font-family: serif;
+      top: 0 !important;
+    }
+    #info-btn:hover { opacity: 1; border-color: #fff !important; }
+
+    /* Modal overlay */
+    .info-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+    }
+    .info-modal.open { display: flex; }
+
+    .info-modal-box {
+      background: rgba(10,10,10,0.92);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 2rem 2.25rem 1.75rem;
+      max-width: 420px;
+      width: 90%;
+      color: #f0f0f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      position: relative;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+    }
+
+    .info-modal-box h2 {
+      margin: 0 0 1.25rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+
+    .info-modal-box ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .info-modal-box li {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: rgba(240,240,248,0.85);
+    }
+
+    .info-modal-box strong { color: #f0f0f8; }
+
+    .key {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 5px;
+      padding: 0.1rem 0.45rem;
+      font-size: 0.8rem;
+      font-family: monospace;
+      color: rgba(255,255,255,0.9);
+      white-space: nowrap;
+    }
+
+    .info-tip {
+      margin: 0;
+      font-size: 0.8rem;
+      color: rgba(240,240,248,0.4);
+      font-style: italic;
+    }
+
+    .info-modal-close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      background: transparent;
+      border: none !important;
+      color: rgba(240,240,248,0.45);
+      font-size: 1rem;
+      cursor: pointer;
+      width: 28px !important;
+      height: 28px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50% !important;
+      transition: color 0.15s;
+    }
+    .info-modal-close:hover { color: #f0f0f8; }
+
+    #back-link {
+      position: fixed;
+      top: calc(70px + 0.6rem);
+      left: 1rem;
+      z-index: 9999;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      text-decoration: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    #back-link:hover {
+      background: rgba(192,132,252,0.3);
+      border-color: rgba(192,132,252,0.5);
+    }
+  </style>
+</head>
+<body>
+  <a href="/projects/" id="back-link">← Projects</a>
+  <canvas id="game" width="960" height="540" aria-label="interactive playlist playground"></canvas>
+  <div id="player-ui">
+    <div class="ui-left">
+      <img id="ui-cover" alt="" style="visibility:hidden;">
+      <div class="ui-meta">
+        <span id="ui-title" class="title"></span>
+        <span id="ui-artist" class="artist"></span>
+      </div>
+    </div>
+    <div class="ui-center">
+      <button id="stop-track"><span>■</span></button>
+      <button id="play-pause">⏵</button>
+      <div class="progress" id="progress">
+        <div class="bar" id="ui-progress"></div>
+        <div class="thumb" id="ui-progress-thumb"></div>
+      </div>
+      <span class="time" id="ui-time">0:00 / 0:00</span>
+    </div>
+    <div class="ui-right">
+      <span id="ui-tracker" class="tracker"></span>
+      <button id="info-btn" title="How to play">?</button>
+    </div>
+  </div>
+
+  <!-- Instructions modal -->
+  <div id="info-modal" class="info-modal" role="dialog" aria-modal="true" aria-label="How to play">
+    <div class="info-modal-box">
+      <button class="info-modal-close" id="info-close" aria-label="Close">✕</button>
+      <h2>How to Play</h2>
+      <ul>
+        <li><span class="key">W A S D</span> or <span class="key">↑ ← ↓ →</span> — Move around the world</li>
+        <li><span class="key">Mouse</span> — Aim your turret</li>
+        <li><span class="key">Space</span> or <span class="key">Click</span> — Shoot</li>
+        <li>Hit a floating album cover to <strong>play that song</strong></li>
+        <li>Shoot an already-playing song to <strong>skip forward 10 seconds</strong></li>
+        <li>Find all <strong>25 songs</strong> hidden across the world!</li>
+      </ul>
+    </div>
+  </div>
+  <script defer src="final-project.js"></script>
+  <script>
+    const infoBtn   = document.getElementById('info-btn');
+    const infoModal = document.getElementById('info-modal');
+    const infoClose = document.getElementById('info-close');
+
+    infoBtn.addEventListener('click', () => infoModal.classList.add('open'));
+    infoClose.addEventListener('click', () => infoModal.classList.remove('open'));
+    infoModal.addEventListener('click', (e) => {
+      if (e.target === infoModal) infoModal.classList.remove('open');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') infoModal.classList.remove('open');
+    });
+  </script>
+</body>
+</html>

@@ -19,7 +19,7 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  animation: slide 7s infinite linear;
+  animation: slide 1s infinite linear;
 }
 
 @keyframes slide {

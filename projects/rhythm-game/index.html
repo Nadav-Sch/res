@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rhythm Game | Nadav Schitzer</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    .rhythm-game-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0 3rem;
+    }
+
+    #rhythm-canvas-container {
+      width: 100%;
+      max-width: 720px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      background: #000;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    }
+
+    #rhythm-canvas-container canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .rhythm-controls-note {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      text-align: center;
+    }
+
+    .key-hint {
+      display: inline-block;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 0.1em 0.5em;
+      font-family: monospace;
+      font-size: 0.9em;
+      color: var(--color-text);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo">NS</a>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/projects/">Projects</a></li>
+          <li><a href="/about/">About</a></li>
+        </ul>
+      </nav>
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <button class="theme-toggle">☀️</button>
+        <button class="nav-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container project-detail">
+    <nav style="margin-bottom: 2rem; padding-top: 2rem;">
+      <a href="/projects/">← Back to Projects</a>
+    </nav>
+
+    <section class="project-header">
+      <h1>Rhythm Game</h1>
+      <div class="project-meta">
+        <div class="project-meta-item">
+          <span class="project-meta-label">Role</span>
+          <span>Solo Developer</span>
+        </div>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Tools</span>
+          <span>p5.js, p5.sound</span>
+        </div>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Category</span>
+          <span>Games / Creative Coding</span>
+        </div>
+        <div class="project-meta-item">
+          <span class="project-meta-label">Song</span>
+          <span>Harder Better Faster Stronger — Daft Punk</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game -->
+    <div class="rhythm-game-wrapper">
+      <div id="rhythm-canvas-container"></div>
+      <p class="rhythm-controls-note">
+        Press <span class="key-hint">G</span> for the left lane &nbsp;·&nbsp; <span class="key-hint">H</span> for the right lane &nbsp;·&nbsp; Hit notes as they reach the target zone
+      </p>
+    </div>
+
+    <section class="project-section">
+      <h2>Overview</h2>
+      <p>A rhythm game built for Creative Coding class using p5.js and p5.sound. Set to Daft Punk's "Harder Better Faster Stronger," the game puts you up against an animated boss enemy. Notes scroll down two lanes and you press G or H to hit them in time with the music — land enough hits to defeat the boss before your health runs out.</p>
+    </section>
+
+    <section class="project-section">
+      <h2>How It's Made</h2>
+      <p>The game runs entirely in the browser using p5.js for rendering and p5.sound for audio playback and beat synchronization. Notes are spawned based on a hand-authored beat pattern array that maps to the rhythm of the song. The boss reacts to hits and misses in real time with frame-based sprite swaps — each attack and flinch is a separate pixel-art sprite. The canvas scales responsively to the container width.</p>
+    </section>
+
+    <section class="project-section">
+      <h2>Challenges</h2>
+      <p>Syncing note timing precisely to audio without a dedicated game engine was the trickiest part. p5.sound's <code>currentTime()</code> doesn't always start at exactly zero, so the beat pattern had to account for a pre-roll offset. Pixel art sprites also needed careful positioning since p5.js doesn't have a built-in sprite system — each frame is manually drawn and swapped based on game state.</p>
+    </section>
+
+    <section style="margin-top: 4rem; text-align: center;">
+      <a href="/projects/" class="btn btn-secondary">← View All Projects</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Navigate</h3>
+        <div class="footer-links">
+          <a href="/">Home</a>
+          <a href="/projects/">Projects</a>
+          <a href="/about/">About</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Social</h3>
+        <div class="footer-links">
+          <a href="#">LinkedIn</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Nadav Schitzer. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../js/main.js"></script>
+
+  <!-- p5.js and p5.sound from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/addons/p5.sound.min.js"></script>
+  <!-- Game sketch (global mode — canvas parents itself to #rhythm-canvas-container) -->
+  <script src="sketch.js"></script>
+</body>
+</html>
