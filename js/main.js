@@ -90,16 +90,12 @@ function initScrollEffects() {
 
   document.querySelectorAll('.about-content').forEach(el => el.classList.add('reveal'));
 
-  // ── Cards: alternating right / left zipper alignment ──
-  // First card goes RIGHT, second goes LEFT, alternating
+  // ── Cards ──
   const cards = document.querySelectorAll('.bento-grid .bento-card, .bento-projects .project-card');
-  cards.forEach((card, i) => {
-    card.classList.add(i % 2 === 0 ? 'card-right' : 'card-left');
-  });
 
   if (reduced) {
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => el.classList.add('visible'));
-    cards.forEach(card => card.classList.add('visible'));
+    cards.forEach(card => { card.style.opacity = 1; card.style.setProperty('--zip', 1); });
     return;
   }
 
@@ -138,25 +134,43 @@ function initScrollEffects() {
 
   document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => sectionObserver.observe(el));
 
-  // ── Observer for cards: zipper opens entering from bottom,
-  //    fades/closes when near the top, reopens scrolling back up ──
-  // rootMargin: shrink the active zone — 20% dead zone at top means
-  // cards start closing before fully leaving, 5% at bottom means
-  // they open as soon as they peek into view.
-  const cardObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      } else {
-        entry.target.classList.remove('visible');
-      }
-    });
-  }, {
-    threshold: 0,
-    rootMargin: '-18% 0px -5% 0px'
-  });
+  // ── Scroll-driven card animation ──
+  // Each card tracks its position in the viewport continuously.
+  // Bottom zone (20% of vh): zip opens + fades in as card enters from below.
+  // Top zone    (28% of vh): zip closes + fades out symmetrically as card exits upward.
+  // Scrolling back up re-enters the top zone and plays the same open animation.
+  function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
-  cards.forEach(el => cardObserver.observe(el));
+  function updateCards() {
+    const vh = window.innerHeight;
+    const enterZone = vh * 0.20; // bottom: card visible after 20% of screen height
+    const exitZone  = vh * 0.28; // top:    card starts hiding 28% below top edge
+
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+
+      // 0→1 as card top crosses from bottom-of-screen into enterZone
+      const enterProgress = clamp((vh - rect.top) / enterZone, 0, 1);
+      // 1→0 as card bottom rises from exitZone toward top of screen
+      const exitProgress  = clamp(rect.bottom / exitZone, 0, 1);
+
+      // Both must agree: fully open only when well inside viewport
+      const p = Math.min(enterProgress, exitProgress);
+
+      card.style.opacity = p;
+      card.style.setProperty('--zip', p);
+    });
+  }
+
+  let rafPending = false;
+  window.addEventListener('scroll', () => {
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(() => { updateCards(); rafPending = false; });
+    }
+  }, { passive: true });
+
+  updateCards(); // run once on load
 }
 
 /* ─── Scrollspy ─────────────────────────────────────────

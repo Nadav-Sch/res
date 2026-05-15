@@ -787,21 +787,20 @@ footer {
   gap: var(--spacing-xl);
 }
 
-/* Each card is narrower; JS adds .card-left or .card-right */
+/* Cards — opacity driven by scroll JS via inline style */
 .bento-card {
   display: flex;
   flex-direction: column;
   overflow: hidden;
   width: 62%;
-  position: relative; /* needed for zipper panels */
+  position: relative;
   opacity: 0;
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
 }
 
-.bento-card.visible { opacity: 1; }
-
-.card-right { margin-left: auto; margin-right: 0; }
-.card-left  { margin-left: 0;    margin-right: auto; }
+/* Cards centered */
+.bento-card,
+.bento-projects .project-card { margin-left: auto; margin-right: auto; }
 
 .bento-featured .bento-card-image {
   height: 340px;
@@ -839,23 +838,26 @@ footer {
 
 .bento-card-image--sm { height: 200px; }
 
-/* ── Zipper panels on homepage cards ── */
+/* ── Zipper panels on homepage cards — driven by --zip CSS var ── */
 .bento-grid .bento-card::before,
 .bento-grid .bento-card::after {
   content: '';
   position: absolute;
   top: 0; bottom: 0;
-  width: 51%; /* slight overlap at center to avoid gap */
+  width: 51%;
   background: var(--color-bg);
   z-index: 20;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
+  will-change: transform;
 }
-.bento-grid .bento-card::before { left: 0; }
-.bento-grid .bento-card::after  { right: 0; }
-
-.bento-grid .bento-card.visible::before { transform: translateX(-101%); }
-.bento-grid .bento-card.visible::after  { transform: translateX(101%); }
+.bento-grid .bento-card::before {
+  left: 0;
+  transform: translateX(calc(var(--zip, 0) * -101%));
+}
+.bento-grid .bento-card::after {
+  right: 0;
+  transform: translateX(calc(var(--zip, 0) * 101%));
+}
 
 .card-placeholder-label {
   color: var(--color-text-secondary);
@@ -874,15 +876,13 @@ footer {
 
 .bento-wide {} /* no-op: wide variant not needed in stack layout */
 
-/* Cards are narrower; JS adds .card-left / .card-right */
+/* Cards — opacity driven by scroll JS via inline style */
 .bento-projects .project-card {
   width: 62%;
-  position: relative; /* for zipper panels */
+  position: relative;
   opacity: 0;
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
 }
-
-.bento-projects .project-card.visible { opacity: 1; }
 
 .bento-projects-image {
   width: 100%;
@@ -910,7 +910,7 @@ footer {
   z-index: 0;
 }
 
-/* ── Zipper panels on projects page cards ── */
+/* ── Zipper panels on projects page cards — driven by --zip CSS var ── */
 .bento-projects .project-card::before,
 .bento-projects .project-card::after {
   content: '';
@@ -919,14 +919,17 @@ footer {
   width: 51%;
   background: var(--color-bg);
   z-index: 20;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
+  will-change: transform;
 }
-.bento-projects .project-card::before { left: 0; }
-.bento-projects .project-card::after  { right: 0; }
-
-.bento-projects .project-card.visible::before { transform: translateX(-101%); }
-.bento-projects .project-card.visible::after  { transform: translateX(101%); }
+.bento-projects .project-card::before {
+  left: 0;
+  transform: translateX(calc(var(--zip, 0) * -101%));
+}
+.bento-projects .project-card::after {
+  right: 0;
+  transform: translateX(calc(var(--zip, 0) * 101%));
+}
 
 /* ===== Projects Page Header ===== */
 
